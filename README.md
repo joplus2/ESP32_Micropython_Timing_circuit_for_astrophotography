@@ -18,3 +18,8 @@ This repository is dedicated to my bachelors thesis - timing circuit for astroph
 - Zpracujte kompletní technickou dokumentaci k HW i SW části práce
 
 ## Microcontroler selection
+
+
+## References
+
+[Display ST7789 driver](https://github.com/russhughes/st7789_mpy)
