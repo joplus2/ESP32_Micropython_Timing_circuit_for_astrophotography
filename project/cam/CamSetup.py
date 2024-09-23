@@ -77,6 +77,7 @@ def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
                TimeShoot -= 0.1
                time.sleep(0.5)  
            if ( btnEnter.value() == True ) and ( TimeShoot > 0):
+               time.sleep(0.5)
                Step = 2
            String = "Cas zaverky: " + str(TimeShoot) + " s        " 
        elif ( Step == 2 ):
@@ -119,30 +120,25 @@ def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
                if ( TempStep < 4 ):
                    TempStep += 1                           # inkrementujeme krok do limitu 4
                else:
-                   TempStep = 1                            # při pokusu inkrementovat nad dáme 1    
-               if ( TempStep == 1 ):
-                   String = 'Nast. cas zaverky         '         # přiřadíme texty
-               elif ( TempStep == 2 ):
-                   String = 'Nast. cas mezi sn.        '
-               elif ( TempStep == 3 ):
-                   String = 'Nast. pocet sn.           '
-               else:
-                   String = 'Pokracovat                   '
+                   TempStep = 1                            # při pokusu inkrementovat nad dáme 1
                time.sleep(0.5)
+               
            if ( btnDwnS.value() == True ):
                if ( TempStep <= 1 ):
                    TempStep = 4                            # při pokusu dekrementovat krok pod limit 1 dáme 4
                else:
-                   TempStep -= 1                            # dekrementujeme jinak krok 
-               if ( TempStep == 1 ):
-                   String = 'Nast. cas zaverky        '         # přiřadíme texty
-               elif ( TempStep == 2 ):
-                   String = 'Nast. cas mezi sn.       '
-               elif ( TempStep == 3 ):
-                   String = 'Nast. pocet sn.          '
-               else:
-                   String = 'Pokracovat                  '
+                   TempStep -= 1                            # dekrementujeme jinak krok
                time.sleep(0.5)
+               
+           if ( TempStep == 1 ):
+               String = 'Nast. cas zaverky        '         # přiřadíme texty
+           elif ( TempStep == 2 ):
+               String = 'Nast. cas mezi sn.       '
+           elif ( TempStep == 3 ):
+               String = 'Nast. pocet sn.          '
+           else:
+               String = 'Pokracovat               '
+               
            if ( btnEnter.value() == True ):
                if ( TempStep == 4 ):
                    Step = 5
