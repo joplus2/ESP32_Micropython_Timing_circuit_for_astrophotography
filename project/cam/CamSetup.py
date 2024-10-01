@@ -3,22 +3,10 @@ import time
 from machine import Pin, SPI
 from disp import st7789
 from disp import vga_16x32
+from config.io import *
 
-#input definition
-btnEnter = Pin(27, Pin.IN, Pin.PULL_DOWN)
-btnDwnS  = Pin(26, Pin.IN, Pin.PULL_DOWN)
-btnUpS   = Pin(25, Pin.IN, Pin.PULL_DOWN)
-btnDwnDec= Pin(15, Pin.IN, Pin.PULL_DOWN)
-btnUpDec = Pin(12, Pin.IN, Pin.PULL_DOWN)
 
 def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
-    # globální proměnná tlačítek
-    global btnEnter
-    global btnDwnS
-    global btnUpS
-    global btnDwnDec
-    global btnUpDec
-    #global tft
     # definice základního nastavení
     Step = 0
     TempStep = 1
