@@ -7,3 +7,8 @@
 ## V002 - 23/09/2024
 - fixed missing delay between enter and next step
 - fixed not showing anything on revision
+
+## V003 - 01/10/2024
+- added config folder with IO.py file defining io
+- deleted IO definitions everywhere else than IO.py
+- in CamShoot function added text with remaining shoots
