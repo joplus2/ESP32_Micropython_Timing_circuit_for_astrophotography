@@ -6,6 +6,7 @@ webrepl.start()
 
 #import
 from machine import Pin, SPI
+from config.io import *
 
 #rozsviceni LED pro BOOT
 bootLed = Pin(2, Pin.OUT)
@@ -31,18 +32,6 @@ tft = st7789.ST7789(SPI(1), 240, 320, Pin(17, Pin.OUT),
                     None, 1)
 string = 'Inicializace'
 tft.text(vga_16x32, string, 40, 100)
-
-#input definition
-global btnEnter
-btnEnter = Pin(27, Pin.IN, Pin.PULL_DOWN)
-global btnDwnS
-btnDwnS  = Pin(26, Pin.IN, Pin.PULL_DOWN)
-global btnUpS
-btnUpS   = Pin(25, Pin.IN, Pin.PULL_DOWN)
-global btnDwnDec
-btnDwnDec= Pin(15, Pin.IN, Pin.PULL_DOWN)
-global btnUpDec
-btnUpDec = Pin(12, Pin.IN, Pin.PULL_DOWN)
 
 # nastavení WiFi AP
 import network
