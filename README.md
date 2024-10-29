@@ -24,6 +24,7 @@ This repository is dedicated to my bachelors thesis - timing circuit for astroph
 SPI(1):
 - SCK pin: 14
 - MOSI pin: 13
+
 Library:
 - Reset pin: 17
 - DC pin: 16
@@ -37,8 +38,8 @@ Library:
 - Decimals up button: pin 12
 
 ### Output definitoions:
-Camera shoot: pin 23
-reserve for camera focus?
+- Camera shoot: pin 23
+- reserve for camera focus?
 
 
 ## References
