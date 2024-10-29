@@ -19,6 +19,27 @@ This repository is dedicated to my bachelors thesis - timing circuit for astroph
 
 ## Microcontroler selection
 
+## Microcontroller pinout
+### Display interface:
+SPI(1):
+- SCK pin: 14
+- MOSI pin: 13
+Library:
+- Reset pin: 17
+- DC pin: 16
+- CS pin: 18
+
+### Input definitions:
+- Enter button: pin 27
+- Seconds down button: pin 26
+- Seconds up button: pin 25
+- Decimals down button: pin 15
+- Decimals up button: pin 12
+
+### Output definitoions:
+Camera shoot: pin 23
+reserve for camera focus?
+
 
 ## References
 
