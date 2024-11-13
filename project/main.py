@@ -1,62 +1,74 @@
-from machine import Pin, SPI
+from machine import Pin, SPI,disable_irq, enable_irq
 from time import sleep
 from disp import vga_16x32
 from cam.CamSetup import SetupFun
 from cam.CamShoot import ShootFun
+from config.io import *
 
-global Setup
-Setup = False 
-global Shoot
+# bool pro vyvolání nastavení
+Setup = False
+# bool pro započetí focení
 Shoot = False
-global Settings
+# vystupni tupple z funkce
 Settings = [0, 0, 0, False]
 
-global TimeShoot        # délka závěrky fotoaparátu
+# délka závěrky fotoaparátu
 TimeShoot = 0
-global TimeBtween       # čas mezi fotkami
+# čas mezi fotkami
 TimeBtween = 0
-global ShootCount       # počet fotek
+# počet fotek
 ShootCount = 0
+# bool pro vypsani textu
+beginTxt = False
 
-# zobrazení hlášky
-string = 'Zacnete ENTERem'
-tft.text(vga_16x32, string, 40, 100)
+try:
+    while (True):
+        # zobrazení hlášky
+        string = 'Zacnete ENTERem'
+        if (beginTxt == False):
+            tft.text(vga_16x32, string, 10, 100)
+            beginTxt = True
+        
+        # spusteni nastaveni pomoci ENTER
+        if (btnEnter.value() == True):
+            sleep(0.5)
+            string = 'Spousteni nastaveni            '
+            tft.text(vga_16x32, string, 10, 100)
+            beginTxt = False
+            sleep(1)
+            Setup = True
+        
+        # spusteni nastaveni + prirazeni z tupple
+        if ( Setup == True ):
+            Settings = SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft)
+            TimeShoot = Settings[0]
+            TimeBtween = Settings[1]
+            ShootCount = Settings[2]
+            Shoot = Settings[3]
+            Setup = False
+            
+        # spusteni foceni
+        if ( Shoot == True ):
+            string = 'Probiha foceni...          '
+            tft.text(vga_16x32, string, 10, 100)
+            ShootFun(Shoot, TimeShoot, TimeBtween, ShootCount, tft)
+            Shoot = False
+            string = 'Dokonceno              '
+            tft.text(vga_16x32, string, 10, 100)
+            sleep(2)
+            #string = 'Zacnete ENTERem        '
+            #tft.text(vga_16x32, string, 10, 100)
+        
+except KeyboardInterrupt:
+    # This part runs when Ctrl+C is pressed
+    print("Program stopped. Exiting...")
 
-# funkce spouštějící nastavení
-def StartSetup(self):
-    global Setup
-    global Shoot
-    global Settings
-    global TimeShoot
-    global TimeBtween
-    global ShootCount
-    global tft
-    string = 'Spousteni nastaveni            '
-    tft.text(vga_16x32, string, 10, 100)
-    sleep(1)
-    Setup = True
-    if ( Setup == True ):
-        Settings = SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft)
-        TimeShoot = Settings[0]
-        TimeBtween = Settings[1]
-        ShootCount = Settings[2]
-        Shoot = Settings[3]
-        Setup = False
-    if ( Shoot == True ):
-        string = 'Probiha foceni...          '
-        tft.text(vga_16x32, string, 10, 100)
-        ShootFun(Shoot, TimeShoot, TimeBtween, ShootCount)
-        Shoot = False
-    string = 'Dokonceno              '
-    tft.text(vga_16x32, string, 10, 100)
-    sleep(2)
-    string = 'Zacnete ENTERem        '
-    tft.text(vga_16x32, string, 10, 100)
-    return
+    # Optional cleanup code
+        
 
 #interrupt na enter pro start nastavení
-if ( Setup == False  ) and ( Shoot == False ):
-    btnEnter.irq( trigger = Pin.IRQ_RISING, handler = StartSetup)
+#if ( Setup == False  ) and ( Shoot == False ):
+#    btnEnter.irq( trigger = Pin.IRQ_RISING, handler = StartSetup)
 
 """
 if ( Setup == True ):
@@ -71,3 +83,10 @@ if ( Shoot == True):
     CamShoot.ShootFun(Shoot, TimeShoot, TimeBtween, ShootCount)
     Shoot = False
 """
+
+
+
+
+
+
+
