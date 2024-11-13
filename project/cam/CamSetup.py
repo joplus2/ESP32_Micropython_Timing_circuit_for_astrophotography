@@ -4,6 +4,7 @@ from machine import Pin, SPI
 from disp import st7789
 from disp import vga_16x32
 from config.io import *
+from disp.functions import *
 
 
 def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
@@ -17,17 +18,8 @@ def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
     PrevTimeShoot = 0
     PrevTimeBtween = 0
     PrevShootCount = 0
-    # oznaceni tlacitek
-    # desetinova tlacitka
-    tft.text(vga_16x32, '^', 70, 5)
-    tft.text(vga_16x32, 'v', 70, 200)
-    tft.text(vga_16x32, '+', 70, 15)
-    tft.text(vga_16x32, 's', 70, 40)
-    # vterinova tlacitka
-    tft.text(vga_16x32, '^', 240, 5)
-    tft.text(vga_16x32, 'v', 240, 200)
-    tft.text(vga_16x32, '+', 240, 15)
-    tft.text(vga_16x32, 's/10', 220, 40)
+    # zobrazeni popisu vterin
+    showSecondBtns(tft)
     
     while ( Setup == True ):
        if ( Step == 0 ):
@@ -41,21 +33,36 @@ def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
                else:
                    String = "Zmenit param: Ne        "  
                if ( btnEnter.value() == True ) and ( ChangeParams == True ):
+                   showDecimalBtns(tft)
                    Step = 1
                    time.sleep(0.5)
                elif ( btnEnter.value() == True ) and ( ChangeParams == False ):
                    Step = 5
                    time.sleep(0.5)
            else:
+               showDecimalBtns(tft)
                Step = 1 
        elif ( Step == 1 ):
            # nastavíme první čas
            if ( btnUpS.value() == True ):
-               TimeShoot += 1
+               if (TimeShoot < 10):
+                   TimeShoot += 1
+               elif (TimeShoot < 30):
+                   TimeShoot += 5
+               elif (TimeShoot < 60):
+                   TimeShoot += 10
+               else:
+                   TimeShoot += 60
                time.sleep(0.5)
-                   
            if ( btnDwnS.value() == True ) and ( TimeShoot >= 1 ):
-               TimeShoot -= 1
+               if (TimeShoot <= 10):
+                   TimeShoot -= 1
+               elif (TimeShoot <= 30):
+                   TimeShoot -= 5
+               elif (TimeShoot <= 60):
+                   TimeShoot -= 10
+               else:
+                   TimeShoot -= 60
                time.sleep(0.5)
                    
            if ( btnUpDec.value() == True ):
@@ -63,11 +70,15 @@ def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
                time.sleep(0.5)  
            if ( btnDwnDec.value() == True ) and ( TimeShoot > 0 ):
                TimeShoot -= 0.1
-               time.sleep(0.5)  
+               time.sleep(0.5)
+               
            if ( btnEnter.value() == True ) and ( TimeShoot > 0):
                time.sleep(0.5)
                Step = 2
-           String = "Cas zaverky: " + str(TimeShoot) + " s        " 
+           if (TimeShoot >= 60):
+               String = "Cas zaverky: " + str(int(TimeShoot/60)) + " min        "
+           else:
+               String = "Cas zaverky: " + str(TimeShoot) + " s        " 
        elif ( Step == 2 ):
            # nastavíme druhý čas
            if ( btnUpS.value() == True ):
@@ -86,6 +97,7 @@ def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
                time.sleep(0.5)  
            if ( btnEnter.value() == True ) and ( TimeBtween > 0 ):
                time.sleep(0.5)
+               vanishDecBtns(tft)
                Step = 3
            String = "Cas mezi sn.: " + str(TimeBtween) + " s       " 
        elif ( Step == 3 ):
@@ -131,6 +143,8 @@ def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
                if ( TempStep == 4 ):
                    Step = 5
                else:
+                   if TempStep == 1 or TempStep == 2:
+                       showDecimalBtns(tft)
                    Step = TempStep
                time.sleep(0.5)
        elif ( Step == 5 ):
@@ -153,39 +167,19 @@ def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
            Shoot = False
            Step = 0
     
-       if ( PrevString != String ):
-            # zapsat nový string
-            tft.text(vga_16x32, String, 10, 100)
-            PrevString = String
-           
-       if ( PrevTimeShoot != TimeShoot ):
-           # zapsat nový čas focení
-           tft.text(vga_16x32, str(TimeShoot) + " s   ", 30, 170)
-           PrevTimeShoot = TimeShoot
-           
-       if ( PrevTimeBtween != TimeBtween ):
-           # zapsat nový čas mezi fotkami
-           tft.text(vga_16x32, str(TimeBtween) + " s   ", 150, 170)
-           PrevTimeBtween = TimeBtween
-           
-       if ( PrevShootCount != ShootCount ):
-           # zapsat nový počet snímků
-           tft.text(vga_16x32, str(ShootCount) + " x   ", 260, 170)
-           PrevShootCount = ShootCount
+       # aktualizace informaci na displeji
+       updateString(tft, String)
+       updateTimeShoot(tft, TimeShoot)
+       updateTimeBtween(tft, TimeBtween)
+       updateShootCount(tft, ShootCount)
     
     Step = 0
     
     # smazani popisu tlacitek
     # Vterinova tlacitka
-    tft.text(vga_16x32, '  ', 70, 5)
-    tft.text(vga_16x32, '  ', 70, 200)
-    tft.text(vga_16x32, '  ', 70, 15)
-    tft.text(vga_16x32, '  ', 70, 40)
+    vanishSecBtns(tft)
     # desetinna tlacitka
-    tft.text(vga_16x32, '  ', 240, 5)
-    tft.text(vga_16x32, '  ', 240, 200)
-    tft.text(vga_16x32, '  ', 240, 15)
-    tft.text(vga_16x32, '    ', 220, 40)
+    vanishSecBtns(tft)
     
     ToReturn = [TimeShoot, TimeBtween, ShootCount, Shoot]
     return ToReturn
