@@ -12,3 +12,8 @@
 - added config folder with IO.py file defining io
 - deleted IO definitions everywhere else than IO.py
 - in CamShoot function added text with remaining shoots
+
+## V004 - 12/12/2024
+- removed decimal buttons for their irrelevance
+- set up time increments for shooting time
+- added warning when exceeded max. time between shots
