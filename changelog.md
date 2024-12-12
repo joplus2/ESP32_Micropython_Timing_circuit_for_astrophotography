@@ -12,6 +12,7 @@
 - added config folder with IO.py file defining io
 - deleted IO definitions everywhere else than IO.py
 - in CamShoot function added text with remaining shoots
+- in main.py reworked main loop completely
 
 ## V004 - 12/12/2024
 - removed decimal buttons for their irrelevance
