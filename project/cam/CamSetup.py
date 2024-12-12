@@ -40,10 +40,10 @@ def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
                    Step = 5
                    time.sleep(0.5)
            else:
-               showDecimalBtns(tft)
+               #showDecimalBtns(tft)
                Step = 1 
        elif ( Step == 1 ):
-           # nastavíme první čas
+           # set up first parameter - shooting time
            if ( btnUpS.value() == True ):
                if (TimeShoot < 10):
                    TimeShoot += 1
@@ -65,12 +65,12 @@ def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
                    TimeShoot -= 60
                time.sleep(0.5)
                    
-           if ( btnUpDec.value() == True ):
-               TimeShoot += 0.1
-               time.sleep(0.5)  
-           if ( btnDwnDec.value() == True ) and ( TimeShoot > 0 ):
-               TimeShoot -= 0.1
-               time.sleep(0.5)
+           #if ( btnUpDec.value() == True ):
+           #    TimeShoot += 0.1
+           #    time.sleep(0.5)  
+           #if ( btnDwnDec.value() == True ) and ( TimeShoot > 0 ):
+           #    TimeShoot -= 0.1
+           #    time.sleep(0.5)
                
            if ( btnEnter.value() == True ) and ( TimeShoot > 0):
                time.sleep(0.5)
@@ -80,25 +80,30 @@ def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
            else:
                String = "Cas zaverky: " + str(TimeShoot) + " s        " 
        elif ( Step == 2 ):
-           # nastavíme druhý čas
+           # set up second parameter - time between shots
            if ( btnUpS.value() == True ):
-               TimeBtween += 1
-               time.sleep(0.5)
-                   
-           if ( btnDwnS.value() == True ) and ( TimeBtween >= 1 ):
-               TimeBtween -= 1
-               time.sleep(0.5)
-                   
-           if ( btnUpDec.value() == True ):
                TimeBtween += 0.1
-               time.sleep(0.5)  
-           if ( btnDwnDec.value() == True ) and ( TimeBtween > 0 ):
+               time.sleep(0.5)
+                   
+           if ( btnDwnS.value() == True ) and ( TimeBtween > 0 ):
                TimeBtween -= 0.1
-               time.sleep(0.5)  
+               time.sleep(0.5)
+                   
+           TimeBtween = round(TimeBtween,1)
+           #if ( btnUpDec.value() == True ):
+           #    TimeBtween += 0.1
+           #    time.sleep(0.5)  
+           #if ( btnDwnDec.value() == True ) and ( TimeBtween > 0 ):
+           #    TimeBtween -= 0.1
+           #    time.sleep(0.5)  
            if ( btnEnter.value() == True ) and ( TimeBtween > 0 ):
                time.sleep(0.5)
-               vanishDecBtns(tft)
+               #vanishDecBtns(tft)
                Step = 3
+           if (TimeBtween > 1 ):
+               showTimeWarning(tft)
+           else:
+               showTimeWarning(tft, False)
            String = "Cas mezi sn.: " + str(TimeBtween) + " s       " 
        elif ( Step == 3 ):
            # nastavíme počet fotek
@@ -143,8 +148,8 @@ def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
                if ( TempStep == 4 ):
                    Step = 5
                else:
-                   if TempStep == 1 or TempStep == 2:
-                       showDecimalBtns(tft)
+                   #if TempStep == 1 or TempStep == 2:
+                   #    showDecimalBtns(tft)
                    Step = TempStep
                time.sleep(0.5)
        elif ( Step == 5 ):
