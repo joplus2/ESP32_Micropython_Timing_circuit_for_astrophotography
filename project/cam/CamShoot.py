@@ -6,8 +6,8 @@ from config.io import *
 
 def ShootFun(Shoot, TimeShoot, TimeBtween, ShootCount, tft):
     while ( Shoot == True ):
-        string = 'Zbyva: ' + str((ShootCount-1))
-        tft.text(vga_16x32, string, 10, 40)
+        string = 'Zbyva: ' + str((ShootCount-1)) + '    '
+        tft.text(vga_16x32, string, 10, 20)
         outCamShoot.on()
         time.sleep(TimeShoot)
         outCamShoot.off()
@@ -16,7 +16,7 @@ def ShootFun(Shoot, TimeShoot, TimeBtween, ShootCount, tft):
             ShootCount -= 1
         else:
             string = '                       '
-            tft.text(vga_16x32, string, 10, 40)
+            tft.text(vga_16x32, string, 10, 20)
             Shoot = False
     return
 
