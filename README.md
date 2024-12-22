@@ -20,10 +20,20 @@ This repository is dedicated to my bachelors thesis - timing circuit for astroph
 ## Microcontroler selection
 
 ## Microcontroller pinout
-### Display interface:
+### Display interface for ESP32:
 SPI(1):
 - SCK pin: 14
 - MOSI pin: 13
+
+Library:
+- Reset pin: 17
+- DC pin: 16
+- CS pin: 18
+
+### Display interface for RPi Pico 2:
+SPI(1):
+- SCK pin: 10
+- MOSI pin: 11
 
 Library:
 - Reset pin: 17
