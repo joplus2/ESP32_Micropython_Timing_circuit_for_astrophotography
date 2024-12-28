@@ -24,7 +24,7 @@ beginTxt = False
 try:
     while (True):
         # zobrazení hlášky
-        string = 'Zacnete ENTERem'
+        string = 'Zacnete ENTERem  '
         if (beginTxt == False):
             tft.text(vga_16x32, string, 10, 100)
             beginTxt = True
@@ -56,8 +56,6 @@ try:
             string = 'Dokonceno              '
             tft.text(vga_16x32, string, 10, 100)
             sleep(2)
-            #string = 'Zacnete ENTERem        '
-            #tft.text(vga_16x32, string, 10, 100)
         
 except KeyboardInterrupt:
     # This part runs when Ctrl+C is pressed
@@ -65,24 +63,6 @@ except KeyboardInterrupt:
 
     # Optional cleanup code
         
-
-#interrupt na enter pro start nastavení
-#if ( Setup == False  ) and ( Shoot == False ):
-#    btnEnter.irq( trigger = Pin.IRQ_RISING, handler = StartSetup)
-
-"""
-if ( Setup == True ):
-    Settings = CamSetup.SetupFun(Setup, TimeShoot, TimeBtween, ShootCount)
-    TimeShoot = Settings[0]
-    TimeBtween = Settings[1]
-    ShootCount = Settings[2]
-    Shoot = Settings[3]
-    Setup = False
-
-if ( Shoot == True):
-    CamShoot.ShootFun(Shoot, TimeShoot, TimeBtween, ShootCount)
-    Shoot = False
-"""
 
 
 
