@@ -44,21 +44,27 @@ def updateTimeShoot(tft, TimeShoot):
     global PrevTimeShoot
     if ( PrevTimeShoot != TimeShoot ):
         # zapsat nový čas focení
-        tft.text(vga_16x32, str(TimeShoot) + " s   ", 30, 170)
+        if ( TimeShoot >= 60 ):
+            TempTimeShoot = int(TimeShoot/60)
+            TimeShootSuffix = " m "
+        else:
+            TempTimeShoot = int(TimeShoot)
+            TimeShootSuffix = " s "
+        tft.text(vga_16x32, str(TempTimeShoot) + TimeShootSuffix, 30, 170)
         PrevTimeShoot = TimeShoot
         
 def updateTimeBtween(tft, TimeBtween):
     global PrevTimeBtween
     if ( PrevTimeBtween != TimeBtween ):
         # zapsat nový čas mezi fotkami
-        tft.text(vga_16x32, str(TimeBtween) + " s   ", 150, 170)
+        tft.text(vga_16x32, str(TimeBtween) + " s", 130, 170)
         PrevTimeBtween = TimeBtween
         
 def updateShootCount(tft, ShootCount):
     global PrevShootCount
     if ( PrevShootCount != ShootCount ):
         # zapsat nový počet snímků
-        tft.text(vga_16x32, str(ShootCount) + " x   ", 260, 170)
+        tft.text(vga_16x32, str(ShootCount) + " x   ", 240, 170)
         PrevShootCount = ShootCount
         
 def showTimeWarning(tft, show=True):
