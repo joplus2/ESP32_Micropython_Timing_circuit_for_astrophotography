@@ -18,3 +18,6 @@
 - removed decimal buttons for their irrelevance
 - set up time increments for shooting time
 - added warning when exceeded max. time between shots
+
+## V005 - 28/12/2024
+- This version addresses a bugs in UI
