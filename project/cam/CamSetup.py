@@ -33,14 +33,12 @@ def SetupFun(Setup, TimeShoot, TimeBtween, ShootCount, tft):
                else:
                    String = "Zmenit param: Ne        "  
                if ( btnEnter.value() == True ) and ( ChangeParams == True ):
-                   showDecimalBtns(tft)
                    Step = 1
                    time.sleep(0.5)
                elif ( btnEnter.value() == True ) and ( ChangeParams == False ):
                    Step = 5
                    time.sleep(0.5)
            else:
-               #showDecimalBtns(tft)
                Step = 1 
        elif ( Step == 1 ):
            # set up first parameter - shooting time
