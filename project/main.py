@@ -1,4 +1,4 @@
-from machine import Pin, SPI,disable_irq, enable_irq
+from machine import Pin, SPI
 from time import sleep
 from disp import vga_16x32
 from cam.CamSetup import SetupFun
