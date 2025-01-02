@@ -10,3 +10,4 @@ btnUpDec = Pin(12, Pin.IN, Pin.PULL_DOWN)
 
 #output definition
 outCamShoot = Pin(23, Pin.OUT)
+bootLed = Pin(2, Pin.OUT)
