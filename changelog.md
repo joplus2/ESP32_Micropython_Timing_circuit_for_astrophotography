@@ -20,4 +20,9 @@
 - added warning when exceeded max. time between shots
 
 ## V005 - 28/12/2024
-- This version addresses a bugs in UI
+- this version addresses bugs in UI
+
+## V006 - 25/12/2025
+- added new folder "nikon" with libraries related with PTP/IP
+- created function for setting up Wi-Fi as retain variables
+- implemented part of Nikon functions (not tested yet)
