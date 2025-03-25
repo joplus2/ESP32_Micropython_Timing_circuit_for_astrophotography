@@ -110,7 +110,7 @@ try:
         if ( Shoot == True ):
             string = 'Probiha foceni...          '
             tft.text(vga_16x32, string, 10, 100)
-            ShootFun(Shoot, TimeShoot, TimeBtween, ShootCount, tft, ptpip)
+            ShootFun(Shoot, TimeShoot, TimeBtween, ShootCount, tft, ptpip, sysSettings[0])
             Shoot = False
             string = 'Dokonceno              '
             tft.text(vga_16x32, string, 10, 100)
@@ -120,12 +120,3 @@ except KeyboardInterrupt:
     # This part runs when Ctrl+C is pressed
     print("Program stopped. Exiting...")
         
-
-
-
-
-
-
-
-
-
