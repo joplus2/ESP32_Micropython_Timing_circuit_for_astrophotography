@@ -1,10 +1,69 @@
-from machine import Pin, SPI
+from machine import Pin, SPI,disable_irq, enable_irq
 from time import sleep
+from sys import exit
+# font libraries
 from disp import vga_16x32
+from disp import vga_8x16
+# camera related libraries
 from cam.CamSetup import SetupFun
 from cam.CamShoot import ShootFun
+from cam.functions import NikonConn
+# configuration libraries
 from config.io import *
+from config.settings import mcuSettings
+# PTP/IP libraries
+from nikon.ptpip import PtpIpConnection
+from nikon.ptpip import PtpIpCmdRequest
+from nikon.threading import Thread
 
+""" for WLAN settings """
+string = 'Podrzenim ENTER zobrazit nastaveni'
+tft.text(vga_8x16, string, 30, 220)
+
+sleep(0.5)
+
+# settings startup logic
+count = 0
+btnHold = 0
+
+while count < 5:
+    if btnEnter.value():
+        btnHold = btnHold + 1
+    sleep(0.5)
+    count = count + 1
+    
+# remove settings text by making black rectangle
+tft.fill_rect(0, 220, 320, 16, st7789.BLACK)
+    
+if btnHold >= 4:
+    string = 'Nastaveni             '
+    tft.text(vga_16x32, string, 40, 100)
+    sleep(1)
+    mcuSettings(tft, sysSettings)
+
+""" calling WiFi connect and start services """
+if ( sysSettings[0] == True ):
+    string = "Spousteni WiFi           "
+    tft.text(vga_16x32, string, 10, 100)
+    NikonConn(tft, sysSettings)
+    string = "Spousteni sluzeb         "
+    tft.text(vga_16x32, string, 10, 100)
+    try:
+        ptpip = PtpIpConnection()
+        ptpip.open()
+        thread = Thread(target=ptpip.communication_thread)
+        thread.daemon = True
+        thread.start()
+        sleep(1)
+    except:
+        string = "Nastala chyba         "
+        tft.text(vga_16x32, string, 10, 100)
+        exit()
+    else:
+        string = "Sluzby spusteny       "
+        tft.text(vga_16x32, string, 10, 100)
+
+""" asigning default values """
 # bool pro vyvolání nastavení
 Setup = False
 # bool pro započetí focení
@@ -51,7 +110,7 @@ try:
         if ( Shoot == True ):
             string = 'Probiha foceni...          '
             tft.text(vga_16x32, string, 10, 100)
-            ShootFun(Shoot, TimeShoot, TimeBtween, ShootCount, tft)
+            ShootFun(Shoot, TimeShoot, TimeBtween, ShootCount, tft, ptpip)
             Shoot = False
             string = 'Dokonceno              '
             tft.text(vga_16x32, string, 10, 100)
@@ -60,9 +119,9 @@ try:
 except KeyboardInterrupt:
     # This part runs when Ctrl+C is pressed
     print("Program stopped. Exiting...")
-
-    # Optional cleanup code
         
+
+
 
 
 
