@@ -1,4 +1,5 @@
 from machine import Pin, SPI,disable_irq, enable_irq
+import network
 from time import sleep
 from sys import exit
 # font libraries
@@ -42,14 +43,16 @@ if btnHold >= 4:
     mcuSettings(tft, sysSettings)
 
 """ calling WiFi connect and start services """
+ptpip = PtpIpConnection()
+wlan = network.WLAN(network.WLAN.IF_STA)
+wlan.active(False)
 if ( sysSettings[0] == True ):
     string = "Spousteni WiFi           "
     tft.text(vga_16x32, string, 10, 100)
-    NikonConn(tft, sysSettings)
+    wlan = NikonConn(tft, sysSettings)
     string = "Spousteni sluzeb         "
     tft.text(vga_16x32, string, 10, 100)
     try:
-        ptpip = PtpIpConnection()
         ptpip.open()
         thread = Thread(target=ptpip.communication_thread)
         thread.daemon = True
@@ -116,7 +119,29 @@ try:
             tft.text(vga_16x32, string, 10, 100)
             sleep(2)
         
+        # if PTP/IP error occured
+        from nikon.ptpip import ErrorFlag
+        if ( ErrorFlag == True ):
+            exit()
+            
 except KeyboardInterrupt:
     # This part runs when Ctrl+C is pressed
     print("Program stopped. Exiting...")
-        
+    
+except:
+    from nikon.ptpip import ErrorFlag
+    if ( ErrorFlag == True ):
+        string = 'Nastala chyba PTPIP   '
+    else:
+        string = "Nastala chyba         "
+    tft.text(vga_16x32, string, 10, 100)
+    string = 'Provedte restart   '
+    tft.text(vga_16x32, string, 10, 140)
+    exit()
+
+
+
+
+
+
+
