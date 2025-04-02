@@ -4,6 +4,7 @@ import network
 from disp import vga_16x32
 from time import sleep
 from config.io import *
+from nikon.ptpip import PtpIpCmdRequest
 global wlan
 
 def NikonConn(tft, settings):
@@ -12,25 +13,29 @@ def NikonConn(tft, settings):
     wlan.active(True)
     wlan.connect(settings[1], settings[2])
     while not wlan.isconnected():
-        string = "Pripojovani k WiFi...     "
+        string = "Pripojovani k WiFi       "
         tft.text(vga_16x32, string, 10, 100)
-    string = "Pripojeno k WiFi.       "
+    string = "Pripojeno k WiFi        "
     tft.text(vga_16x32, string, 10, 100)
     sleep(1)
+    return wlan
     
 def wiredShutter(TimeShoot):
     outCamShoot.on()
     sleep(TimeShoot)
     outCamShoot.off()
     
-def ptpipShutter(ptpip):
+def ptpipShutter(ptpip, TimeShoot):
     # command to start shooting
     ptpip_cmd = PtpIpCmdRequest(cmd=0x9207, param1=0xffffffff, param2=0x0000)
     ptpip_packet = ptpip.send_ptpip_cmd(ptpip_cmd)
-
+    
     sleep(TimeShoot)
+    
+    from nikon.ptpip import CamResponse
+    print(CamResponse)
 
-    # command to stop shooting
+    # command to interrupt shooting
     ptpip_cmd = PtpIpCmdRequest(cmd=0x920C, param1=0xffffffff, param2=0x0000)
     ptpip_packet = ptpip.send_ptpip_cmd(ptpip_cmd)
     
