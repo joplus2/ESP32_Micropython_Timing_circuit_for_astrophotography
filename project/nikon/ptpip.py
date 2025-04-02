@@ -4,7 +4,12 @@ import nikon.uuid as uuid
 import time
 import usocket as socket
 import struct
+import sys
 
+global ErrorFlag
+ErrorFlag = False
+global CamResponse
+CamResponse = 0x2000
 
 class PtpIpConnection(object):
 
@@ -36,23 +41,37 @@ class PtpIpConnection(object):
                 # do a ping receive a pong (same as ping) as reply to keep the connection alive
                 # couldnt get any reply onto a propper PtpIpPing packet so i am querying the status
                 # of the device
-                ptpip_packet_reply = self.send_recieve_ptpip_packet(PtpIpCmdRequest(cmd=0x90C8),
-                    self.session)
+                try:
+                    ptpip_packet_reply = self.send_recieve_ptpip_packet(PtpIpCmdRequest(cmd=0x90C8),
+                        self.session)
+                except:
+                    global ErrorFlag
+                    ErrorFlag = True
+                    print('Error occured')
+                    sys.exit()
                 if isinstance(ptpip_packet_reply, PtpIpCmdResponse):
-                    time.sleep(1)
+                    time.sleep(0.2)
                     continue
             else:
                 # get the next command from command the queue
                 ptip_cmd = self.cmd_queue.pop()
-                ptpip_packet_reply = self.send_recieve_ptpip_packet(ptip_cmd, self.session)
+                try:
+                    ptpip_packet_reply = self.send_recieve_ptpip_packet(ptip_cmd, self.session)
+                except:
+                    global ErrorFlag
+                    ErrorFlag = True
+                    print('Error occured')
+                    sys.exit()
                 if (ptpip_packet_reply.ptp_response_code == 0x2001 and \
                         ptpip_packet_reply.ptp_response_code == 0x2019):
                     print("Cmd send successfully")
                 else:
+                    global CamResponse
+                    CamResponse = ptpip_packet_reply.ptp_response_code
                     print("cmd reply is: " + str(ptpip_packet_reply.ptp_response_code))
 
             # wait 1 second before new packets are processed/send to the camera
-            time.sleep(1)
+            time.sleep(0.2)
             pass
 
     def send_ptpip_cmd(self, ptpip_packet):
@@ -141,7 +160,7 @@ class PtpIpConnection(object):
     def recieve_data(self, session):
         data = session.recv(4)
         (data_length,) = struct.unpack('I', data)
-        print("Laenge des Paketes: " + str(data_length))
+        print("Packet length: " + str(data_length))
         while (data_length) > len(data):
             data += session.recv(data_length - len(data))
         return data[4:]
@@ -357,7 +376,7 @@ class PtpIpCmdRequest(PtpIpPacket):
 class PtpIpCmdResponse(PtpIpPacket):
     """
     ResponseCode Description
-    0x2000 Undefined
+    0x2000 Undefined - 8192
     0x2001 OK - 8193
     0x2002 General Error
     0x2003 Session Not Open
