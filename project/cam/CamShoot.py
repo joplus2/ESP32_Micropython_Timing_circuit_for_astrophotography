@@ -13,7 +13,7 @@ def ShootFun(Shoot, TimeShoot, TimeBtween, ShootCount, tft, ptpip, wlanActive):
         #time.sleep(TimeShoot)
         #outCamShoot.off()
         if ( wlanActive == True ):
-            ptpipShutter(ptpip)
+            ptpipShutter(ptpip, TimeShoot)
         else:
             wiredShutter(TimeShoot)
         time.sleep(TimeBtween)
