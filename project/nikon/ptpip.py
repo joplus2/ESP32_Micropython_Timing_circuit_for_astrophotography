@@ -10,6 +10,8 @@ global ErrorFlag
 ErrorFlag = False
 global CamResponse
 CamResponse = 0x2000
+global CmdSuccess
+CmdSuccess = False
 
 class PtpIpConnection(object):
 
@@ -36,6 +38,8 @@ class PtpIpConnection(object):
 
 
     def communication_thread(self):
+        global CmdSuccess
+        global ErrorFlag
         while True:
             if len(self.cmd_queue) == 0:
                 # do a ping receive a pong (same as ping) as reply to keep the connection alive
@@ -45,7 +49,6 @@ class PtpIpConnection(object):
                     ptpip_packet_reply = self.send_recieve_ptpip_packet(PtpIpCmdRequest(cmd=0x90C8),
                         self.session)
                 except:
-                    global ErrorFlag
                     ErrorFlag = True
                     print('Error occured')
                     sys.exit()
@@ -56,14 +59,15 @@ class PtpIpConnection(object):
                 # get the next command from command the queue
                 ptip_cmd = self.cmd_queue.pop()
                 try:
+                    CamSuccess = False 
                     ptpip_packet_reply = self.send_recieve_ptpip_packet(ptip_cmd, self.session)
                 except:
                     global ErrorFlag
                     ErrorFlag = True
                     print('Error occured')
                     sys.exit()
-                if (ptpip_packet_reply.ptp_response_code == 0x2001 and \
-                        ptpip_packet_reply.ptp_response_code == 0x2019):
+                if (ptpip_packet_reply.ptp_response_code == 0x2001):
+                    CmdSuccess = True 
                     print("Cmd send successfully")
                 else:
                     global CamResponse
@@ -535,4 +539,3 @@ class PtpIpDataObject(object):
         super(PtpIpDataObject, self).__init__()
         self.object_handle = object_handle
         self.data = data
-
