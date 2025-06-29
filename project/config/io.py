@@ -2,12 +2,12 @@
 from machine import Pin
 
 #input definition
-btnEnter = Pin(27, Pin.IN, Pin.PULL_DOWN)
-btnDwnS  = Pin(26, Pin.IN, Pin.PULL_DOWN)
-btnUpS   = Pin(25, Pin.IN, Pin.PULL_DOWN)
-btnDwnDec= Pin(15, Pin.IN, Pin.PULL_DOWN)
-btnUpDec = Pin(12, Pin.IN, Pin.PULL_DOWN)
+btnEnter = Pin(28, Pin.IN, Pin.PULL_UP)
+btnDwnS  = Pin(26, Pin.IN, Pin.PULL_UP)
+btnUpS   = Pin(9,  Pin.IN, Pin.PULL_UP)
+btnDwnDec= Pin(15, Pin.IN, Pin.PULL_UP)
+btnUpDec = Pin(12, Pin.IN, Pin.PULL_UP)
 
 #output definition
-outCamShoot = Pin(23, Pin.OUT)
-bootLed = Pin(2, Pin.OUT)
+outCamShoot = Pin(6, Pin.OUT)
+bootLed = Pin("LED", Pin.OUT)
