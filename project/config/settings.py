@@ -11,10 +11,8 @@ from config.functions import *
 def mcuSettings(tft, prevSettings):
     tft.fill_rect(0, 100, 320, 32, st7789.BLACK)
     newSettings = [prevSettings[0], "", ""]
-    #newSettings[1] = ""
-    #newSettings[2] = ""
     Setup = True
-    btnDelay = 0.25
+    btnDelay = 0.10
     Step = 0
     TempStep = 0
     char = 32
@@ -23,16 +21,17 @@ def mcuSettings(tft, prevSettings):
     string = ""
     string3 = ""
     showSecondBtns(tft)
+    showEnterBtn(tft)
     while (Setup == True ):
         if ( Step == 0 ):
-            if ( btnUpS.value() == True ) or ( btnDwnS.value() == True ):
+            if ( btnUpS.value() == False ) or ( btnDwnS.value() == False ):
                    newSettings[0] = not (newSettings[0])
                    time.sleep(btnDelay)
             if ( newSettings[0] == True ):
                 string = "Vyuzivat WiFi: Ano    "
             else:
                 string = "Vyuzivat WiFi: Ne     "
-            if ( btnEnter.value() == True ):
+            if ( btnEnter.value() == False ):
                 Step = 1
                 time.sleep(btnDelay)
         
@@ -49,18 +48,18 @@ def mcuSettings(tft, prevSettings):
             string = "WiFi SSID:            "
             string3 = prevSettings[1]
             
-            if (( btnUpS.value() == True ) or ( btnDwnS.value() == True )) and ( char == 32 ):
+            if (( btnUpS.value() == False ) or ( btnDwnS.value() == False )) and ( char == 32 ):
                    char = 65
                    time.sleep(btnDelay)
             
-            if ( btnUpS.value() == True ) and ( btnDwnS.value() == False ):
+            if ( btnUpS.value() == False ) and ( btnDwnS.value() == True ):
                 char += 1
                 time.sleep(btnDelay)
-            elif ( btnUpS.value() == False ) and ( btnDwnS.value() == True ):
+            elif ( btnUpS.value() == True ) and ( btnDwnS.value() == False ):
                 char -= 1
                 time.sleep(btnDelay)
-            elif ( btnUpS.value() == True ) and ( btnDwnS.value() == True ):
-                char = 65
+            elif ( btnUpS.value() == False ) and ( btnDwnS.value() == False ):
+                char = 32
                 time.sleep(btnDelay)
             
             # logic for typing:
@@ -88,12 +87,12 @@ def mcuSettings(tft, prevSettings):
             string2 = newSettings[1]
             tft.text(vga_16x32, chr(char), (20+(16*charCnt)), 100)
             
-            if ( btnEnter.value() == True ) and not (char == 32):
+            if ( btnEnter.value() == False ) and not (char == 32):
                 newSettings[1] = newSettings[1] + chr(char)
                 charCnt += 1
                 char = 32
                 time.sleep(btnDelay)
-            elif ( btnEnter.value() == True ) and ( char == 32 ):
+            elif ( btnEnter.value() == False ) and ( char == 32 ):
                 if ( newSettings[1] == ""):
                     newSettings[1] = prevSettings[1]
                 Step += 1
@@ -107,17 +106,17 @@ def mcuSettings(tft, prevSettings):
             string = "WiFi heslo:          "
             string3 = prevSettings[2]
             
-            if (( btnUpS.value() == True ) or ( btnDwnS.value() == True )) and ( char == 32 ):
+            if (( btnUpS.value() == False ) or ( btnDwnS.value() == False )) and ( char == 32 ):
                    char = 65
                    time.sleep(btnDelay)
             
-            if ( btnUpS.value() == True ) and ( btnDwnS.value() == False ):
+            if ( btnUpS.value() == False ) and ( btnDwnS.value() == True ):
                 char += 1
                 time.sleep(btnDelay)
-            elif ( btnUpS.value() == False ) and ( btnDwnS.value() == True ):
+            elif ( btnUpS.value() == True ) and ( btnDwnS.value() == False ):
                 char -= 1
                 time.sleep(btnDelay)
-            elif ( btnUpS.value() == True ) and ( btnDwnS.value() == True ):
+            elif ( btnUpS.value() == False ) and ( btnDwnS.value() == False ):
                 char = 65
                 time.sleep(btnDelay)
             
@@ -146,12 +145,12 @@ def mcuSettings(tft, prevSettings):
             string2 = newSettings[2]
             tft.text(vga_16x32, chr(char), (20+(16*charCnt)), 100)
             
-            if ( btnEnter.value() == True ) and not (char == 32):
+            if ( btnEnter.value() == False ) and not (char == 32):
                 newSettings[2] = newSettings[2] + chr(char)
                 charCnt += 1
                 char = 32
                 time.sleep(btnDelay)
-            elif ( btnEnter.value() == True ) and ( char == 32 ):
+            elif ( btnEnter.value() == False ) and ( char == 32 ):
                 if ( newSettings[2] == "" ):
                     newSettings[2] = prevSettings[2]
                 Step += 1
@@ -162,19 +161,19 @@ def mcuSettings(tft, prevSettings):
             
         elif ( Step == 3 ):
            # revision
-           if ( btnUpS.value() == True ):
+           if ( btnUpS.value() == False ):
+               time.sleep(btnDelay)
                if ( TempStep < 4 ):
                    TempStep += 1                           # inkrementujeme krok do limitu 4
                else:
                    TempStep = 1                            # při pokusu inkrementovat nad dáme 1
-               time.sleep(0.5)
                
-           if ( btnDwnS.value() == True ):
+           if ( btnDwnS.value() == False ):
+               time.sleep(btnDelay)
                if ( TempStep <= 1 ):
                    TempStep = 4                            # při pokusu dekrementovat krok pod limit 1 dáme 4
                else:
                    TempStep -= 1                            # dekrementujeme jinak krok
-               time.sleep(0.5)
                
            if ( TempStep == 0 ):
                string = 'Nast. stavu WiFi         '         # přiřadíme texty
@@ -185,14 +184,15 @@ def mcuSettings(tft, prevSettings):
            else:
                string = 'Pokracovat               '
                
-           if ( btnEnter.value() == True ):
+           if ( btnEnter.value() == False ):
+               time.sleep(btnDelay)
                if ( TempStep == 3 ):
                    Step = 4
                else:
                    Step = TempStep
-               time.sleep(0.5)
                
         elif ( Step == 4 ):
+            tft.text(vga_16x32, string, 20, 50, color=0xF800)
             """ Step handling and saving settings """
             stringToSave = makeSettingString(newSettings[0], newSettings[1], newSettings[2])
             f = open("/config/settings.txt", "w")
