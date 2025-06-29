@@ -9,10 +9,16 @@ PrevTimeShoot = 0
 PrevTimeBtween = 0
 PrevShootCount = 0
 
+def showEnterBtn(tft):
+    tft.text(vga_16x32, '>', 270, 200)
+    
+def vanishEnterBtn(tft):
+    tft.text(vga_16x32, '  ', 270, 200)
+
 def showSecondBtns(tft):
-    tft.text(vga_16x32, '^', 70, 5)
-    tft.text(vga_16x32, 'v', 70, 200)
-    tft.text(vga_16x32, '+', 70, 15)
+    tft.text(vga_16x32, '^', 105, 5)
+    tft.text(vga_16x32, 'v', 105, 200)
+    tft.text(vga_16x32, '+', 105, 15)
     #tft.text(vga_16x32, 's', 70, 40)
     
 def showDecimalBtns(tft):
@@ -22,9 +28,9 @@ def showDecimalBtns(tft):
     #tft.text(vga_16x32, 's/10', 220, 40)
     
 def vanishSecBtns(tft):
-    tft.text(vga_16x32, '  ', 70, 5)
-    tft.text(vga_16x32, '  ', 70, 200)
-    tft.text(vga_16x32, '  ', 70, 15)
+    tft.text(vga_16x32, '  ', 105, 5)
+    tft.text(vga_16x32, '  ', 105, 200)
+    tft.text(vga_16x32, '  ', 105, 15)
     #tft.text(vga_16x32, '  ', 70, 40)
     
 def vanishDecBtns(tft):
