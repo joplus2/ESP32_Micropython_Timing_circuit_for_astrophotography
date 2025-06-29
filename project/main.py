@@ -1,10 +1,11 @@
-from machine import Pin, SPI,disable_irq, enable_irq
+from machine import Pin, SPI
 import network
 from time import sleep
 from sys import exit
-# font libraries
+# font libraries + disp lib
 from disp import vga_16x32
 from disp import vga_8x16
+from disp.functions import showEnterBtn, vanishEnterBtn
 # camera related libraries
 from cam.CamSetup import SetupFun
 from cam.CamShoot import ShootFun
@@ -28,7 +29,7 @@ count = 0
 btnHold = 0
 
 while count < 5:
-    if btnEnter.value():
+    if not btnEnter.value():
         btnHold = btnHold + 1
     sleep(0.5)
     count = count + 1
@@ -82,6 +83,8 @@ TimeBtween = 0
 ShootCount = 0
 # bool pro vypsani textu
 beginTxt = False
+# show enter button
+showEnterBtn(tft)
 
 try:
     while (True):
@@ -92,9 +95,9 @@ try:
             beginTxt = True
         
         # spusteni nastaveni pomoci ENTER
-        if (btnEnter.value() == True):
+        if (btnEnter.value() == False):
             sleep(0.5)
-            string = 'Spousteni nastaveni            '
+            string = 'Spousteni nastaveni...         '
             tft.text(vga_16x32, string, 10, 100)
             beginTxt = False
             sleep(1)
@@ -111,6 +114,7 @@ try:
             
         # spusteni foceni
         if ( Shoot == True ):
+            vanishEnterBtn(tft)
             string = 'Probiha foceni...          '
             tft.text(vga_16x32, string, 10, 100)
             ShootFun(Shoot, TimeShoot, TimeBtween, ShootCount, tft, ptpip, sysSettings[0])
@@ -118,19 +122,30 @@ try:
             string = 'Dokonceno              '
             tft.text(vga_16x32, string, 10, 100)
             sleep(2)
+            showEnterBtn(tft)
         
         # if PTP/IP error occured
-        from nikon.ptpip import ErrorFlag
+        from nikon.ptpip import ErrorFlag, CmdSuccess
         if ( ErrorFlag == True ):
-            exit()
+            raise ValueError('PTPIP_err')
+            
+        # to close PTP/IP connection
+        if ( btnUpS.value() == False  ) and \
+           ( btnDwnS.value() == False ) and \
+           ( sysSettings[0] == True   ):
+            # command to close PTP/IP session
+            ptpip_cmd = PtpIpCmdRequest(cmd=0x1003, param1=0xffffffff, param2=0x0000)
+            ptpip_packet = ptpip.send_ptpip_cmd(ptpip_cmd)
+            if ( CmdSuccess == True ):
+                tft.text(vga_16x32, 'PTP/IP session zavrena', 10, 100)
+            
             
 except KeyboardInterrupt:
     # This part runs when Ctrl+C is pressed
     print("Program stopped. Exiting...")
     
-except:
-    from nikon.ptpip import ErrorFlag
-    if ( ErrorFlag == True ):
+except ValueError as e:
+    if ( e == 'PTPIP_err' ):
         string = 'Nastala chyba PTPIP   '
     else:
         string = "Nastala chyba         "
@@ -138,10 +153,3 @@ except:
     string = 'Provedte restart   '
     tft.text(vga_16x32, string, 10, 140)
     exit()
-
-
-
-
-
-
-
